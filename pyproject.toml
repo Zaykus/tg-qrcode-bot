@@ -1,0 +1,11 @@
+[project]
+name = "tgqr"
+version = "0.1.0"
+description = "Simple telegram bot that converts text to QR code"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "python-dotenv>=1.1.0",
+    "qrcode[pil]>=8.2",
+    "telethon>=1.40.0",
+]
