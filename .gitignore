@@ -14,3 +14,8 @@ wheels/
 
 # Telegram
 *.session
+
+# WebApp build files
+webapp/dist/
+webapp/build/
+webapp/.cache/
