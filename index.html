@@ -1,25 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator Mini App</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+  <!-- qrcode.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    body {
+      background: #f4f6f8;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 32px 24px 40px 24px;
+      text-align: center;
+    }
+    h2 {
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #1a202c;
+      letter-spacing: 1px;
+    }
+    .input-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .input-row input[type="text"] {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .input-row input[type="text"]:focus {
+      border: 1.5px solid #3182ce;
+    }
+    .input-row button {
+      background: #0078d7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .input-row button:hover {
+      background: #005fa3;
+    }
+    .color-picker-row {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .color-picker-row label {
+      font-size: 1rem;
+      color: #495057;
+    }
+    .color-picker-row input[type="color"] {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    #qrcode {
+      margin: 28px auto 0;
+      background: #fff;
+      border-radius: 8px;
+      min-height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    @media (max-width: 500px) {
+      .container {
+        max-width: 98vw;
+        padding: 18px 8px 24px;
+      }
+      h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>QR Code Generator</h1>
-        <div class="input-group">
-            <input id="text" type="text" placeholder="Enter text for QR code">
-            <button onclick="generateQR()">Generate QR</button>
-        </div>
-        <div class="color-picker">
-            <label for="qr-color">QR Code Color:</label>
-            <input type="color" id="qr-color" value="#000000">
-        </div>
-        <div id="qrcode" class="qr-container"></div>
+  <div class="container">
+    <h2>QR Code Generator</h2>
+    <div class="input-row">
+      <input id="text" type="text" placeholder="Enter text for QR code" />
+      <button id="generateBtn">Generate QR</button>
     </div>
-    <script src="script.js"></script>
+    <div class="color-picker-row">
+      <label for="color">QR Code Color:</label>
+      <input type="color" id="color" value="#000000" />
+    </div>
+    <div id="qrcode"></div>
+  </div>
+
+  <script>
+    const textInput = document.getElementById('text');
+    const colorInput = document.getElementById('color');
+    const generateBtn = document.getElementById('generateBtn');
+    const qrDiv = document.getElementById('qrcode');
+
+    function generateQR() {
+      const text = textInput.value.trim();
+      const color = colorInput.value;
+      qrDiv.innerHTML = '';
+      if (!text) {
+        qrDiv.innerHTML = "<span style='color:#b91c1c;font-weight:500'>Please enter text to generate QR code.</span>";
+        return;
+      }
+      // Generate the QR code as canvas
+      QRCode.toCanvas(
+        text,
+        {
+          color: { dark: color, light: '#fff' }, 
+          width: 180,
+          margin: 2
+        },
+        function (error, canvas) {
+          if (error) {
+            qrDiv.innerHTML = "<span style='color:red'>Failed to generate QR code.</span>";
+            return;
+          }
+          qrDiv.appendChild(canvas);
+        }
+      );
+    }
+
+    generateBtn.addEventListener('click', generateQR);
+    textInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') generateQR();
+    });
+    colorInput.addEventListener('input', generateQR);
+
+    // Optionally, generate a default QR code on page load
+    // generateQR();
+  </script>
 </body>
 </html>
