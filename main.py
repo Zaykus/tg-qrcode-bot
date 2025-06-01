@@ -6,7 +6,7 @@ import qrcode
 from qrcode.image.pil import PilImage
 from telethon import TelegramClient, events
 from telethon.tl.custom import Button # Import Button for keyboard markups
-
+from telethon.tl.types import KeyboardButtonWebView
 
 BOT_GREETING_MESSAGE = """Hello there! I am a bot that can generate QR codes.
 
@@ -74,6 +74,17 @@ def get_main_menu_keyboard():
     return client.build_reply_markup([
         Button.inline("Generate Regular QR", data="regular_qr_mode"),
         Button.inline("Generate Colored QR", data="color_qr_mode")
+    ])
+
+def get_main_menu_keyboard():
+    """Returns the main menu keyboard with Mini App button."""
+    return client.build_reply_markup([
+        [Button.inline("Generate Regular QR", data="regular_qr_mode")],
+        [Button.inline("Generate Colored QR", data="color_qr_mode")],
+        [KeyboardButtonWebView(
+            text="Open QR Mini App",
+            url="https://YOUR-HOSTED-WEBAPP-URL/"  # Replace with your actual URL
+        )]
     ])
 
 def get_color_selection_keyboard():
@@ -196,3 +207,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
